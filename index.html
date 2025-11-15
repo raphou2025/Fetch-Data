@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch from Website</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="shortcut icon" href="./img/icons8-investment-portfolio-100.png" type="image/x-icon">
+  </head>
+  <body>
+    <div class="px-6 py-4 bg-slate-500 md:w-[50%] w-[90%] mx-auto mt-20 rounded-[20px]">
+      <h2 class="mt-4 text-center text-white font-semibold uppercase">
+        get people from internet
+      </h2>
+
+      <div class="flex gap-6 justify-center mt-6">
+        <button
+          id="btnAll"
+          class="px-6 py-2 bg-green-600 text-white font-semibold rounded-[20px] hover:text-green-600 hover:bg-white transition duration-300"
+        >
+          Show Employees-Data
+        </button>
+
+        <button
+          id="btnClear"
+          class="px-6 py-2 bg-red-600 text-white font-semibold rounded-[20px] hover:text-red-600 hover:bg-white transition duration-300""
+        >
+          Clear Employees-Data
+        </button>
+      </div>
+
+      <div id="displayPeople" class="w-full overflow-x-auto mb-2"></div>
+    </div>
+
+    <script>
+      const btnAll = document.getElementById("btnAll");
+      const btnClear = document.getElementById("btnClear");
+      const displayPeople = document.getElementById("displayPeople");
+
+      async function fetchPeople() {
+        const res = await fetch("https://jsonplaceholder.typicode.com/users");
+        const data = await res.json();
+        return data;
+      }
+
+      btnAll.addEventListener("click", async function () {
+        const users = await fetchPeople();
+
+        let tableHTML = `
+          <div class="w-full overflow-x-auto mt-10">
+            <table class="min-w-max border border-gray-300 bg-white rounded-[20px] shadow-md overflow-hidden mb-4">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="border p-2">Name</th>
+                  <th class="border p-2">Username</th>
+                  <th class="border p-2">Email</th>
+                  <th class="border p-2">Street</th>
+                  <th class="border p-2">City</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        users.forEach((user) => {
+          tableHTML += `
+            <tr class="hover:bg-gray-600 hover:text-white transition duration-300">
+              <td class="border p-2">${user.name}</td>
+              <td class="border p-2">${user.username}</td>
+              <td class="border p-2 bg-blue-700 text-white">${user.email}</td>
+              <td class="border p-2">${user.address.street}</td>
+              <td class="border p-2">${user.address.city}</td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        displayPeople.innerHTML = tableHTML;
+      });
+
+      btnClear.addEventListener("click", function () {
+        displayPeople.innerHTML = "<p class='text-center mt-10 text-[40px] font-semibold text-white bg-blue-800/20 rounded-[30px]'>Thank you!</p>";
+      });
+    </script>
+  </body>
+</html>
